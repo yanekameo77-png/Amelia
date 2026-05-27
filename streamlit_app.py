@@ -48,21 +48,27 @@ st.markdown("""
 }
 
 /* ANIMASI BERBEDA */
-.b1 {
-    animation: gerak1 6s linear infinite alternate;
-}
+st.markdown(f"""
+<style>
 
-.b2 {
-    animation: gerak2 4s linear infinite alternate;
-}
+.b1 {{
+    animation: gerak1 {kecepatan}s linear infinite alternate;
+}}
 
-.b3 {
-    animation: gerak3 5s linear infinite alternate;
-}
+.b2 {{
+    animation: gerak2 {kecepatan*0.8}s linear infinite alternate;
+}}
 
-.b4 {
-    animation: gerak4 7s linear infinite alternate;
-}
+.b3 {{
+    animation: gerak3 {kecepatan*1.2}s linear infinite alternate;
+}}
+
+.b4 {{
+    animation: gerak4 {kecepatan*0.6}s linear infinite alternate;
+}}
+
+</style>
+""", unsafe_allow_html=True)
 
 /* KEYFRAMES */
 @keyframes gerak1 {
@@ -153,10 +159,12 @@ suhu_animasi = st.slider(
     300
 )
 
-st.write(
-    f"Semakin tinggi suhu ({suhu_animasi} K), "
-    "partikel bergerak semakin cepat."
-)
+# Semakin tinggi suhu → semakin cepat
+kecepatan = 12 - (suhu_animasi / 100)
+
+# Batas minimum
+if kecepatan < 1:
+    kecepatan = 1
 # =========================
 # LANGKAH PENYELESAIAN
 # =========================
