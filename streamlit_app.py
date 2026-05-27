@@ -100,7 +100,7 @@ dan suhu **25°C**?
 )
 
 # =========================
-# ANIMASI PARTIKEL GAS
+# STYLE CSS MODERN
 # =========================
 st.markdown("""
 <style>
