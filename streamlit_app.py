@@ -16,7 +16,7 @@ st.set_page_config(
 )
 
 # =========================
-# STYLE CSS MODERN
+# STYLE CSS
 # =========================
 st.markdown("""
 <style>
@@ -116,21 +116,47 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 # =========================
-# RUMUS
+# ANIMASI PARTIKEL GAS
 # =========================
-st.subheader("Persamaan Gas Ideal")
+st.subheader("⚛️ Simulasi Partikel Gas Ideal")
+
+html_partikel = ""
+
+kelas = ["b1", "b2", "b3", "b4"]
+
+for i in range(20):
+
+    left = (i * 30) % 500
+    top = (i * 20) % 250
+
+    kelas_animasi = kelas[i % 4]
+
+    html_partikel += f'''
+    <div class="bola {kelas_animasi}"
+    style="left:{left}px; top:{top}px;">
+    </div>
+    '''
 
 st.markdown(
-    '<div class="rumus">PV = nRT</div>',
+    f'<div class="kotak">{html_partikel}</div>',
     unsafe_allow_html=True
 )
 
-st.write(
-    "Karena yang dicari massa jenis (ρ), maka persamaan diubah menjadi:"
+# =========================
+# SLIDER SUHU
+# =========================
+
+suhu_animasi = st.slider(
+    "Atur Suhu Gas (K)",
+    100,
+    1000,
+    300
 )
 
-st.latex(r"\rho = \frac{PM}{RT}")
-
+st.write(
+    f"Semakin tinggi suhu ({suhu_animasi} K), "
+    "partikel bergerak semakin cepat."
+)
 # =========================
 # LANGKAH PENYELESAIAN
 # =========================
