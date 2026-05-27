@@ -1,23 +1,43 @@
 try:
     import streamlit as st
+    import streamlit.components.v1 as components
 except ModuleNotFoundError:
     raise ModuleNotFoundError(
-        "Streamlit belum terinstall. Jalankan perintah: pip install streamlit"
+        "Streamlit belum terinstall. Jalankan: pip install streamlit"
     )
 
 import time
 
-# =========================
+# ====================================
 # KONFIGURASI HALAMAN
-# =========================
+# ====================================
+
 st.set_page_config(
-    page_title="Animasi Gas Ideal",
+    page_title="Simulasi Gas Ideal",
     layout="centered"
 )
 
-# =========================
+# ====================================
+# JUDUL
+# ====================================
+
+st.title("⚛️ Simulasi Gas Ideal")
+
+st.write("""
+### Contoh Soal
+
+Berapakah massa jenis gas oksigen pada:
+- Tekanan = 1520 Torr
+- Suhu = 25°C
+
+Diketahui:
+- Massa atom O = 16 g/mol
+- Mr O₂ = 32 g/mol
+""")
+
+# ====================================
 # SLIDER SUHU
-# =========================
+# ====================================
 
 suhu_animasi = st.slider(
     "🌡️ Atur Suhu Gas (K)",
@@ -27,26 +47,46 @@ suhu_animasi = st.slider(
 )
 
 # Semakin tinggi suhu → semakin cepat
-kecepatan = 12 - (suhu_animasi / 100)
+kecepatan = max(1, 12 - (suhu_animasi / 100))
 
-if kecepatan < 1:
-    kecepatan = 1
+st.write(
+    f"Semakin tinggi suhu ({suhu_animasi} K), "
+    "partikel bergerak semakin cepat."
+)
 
-# =========================
-# CSS DINAMIS
-# =========================
+# ====================================
+# HTML + CSS ANIMASI
+# ====================================
 
-st.markdown(f"""
+html_code = f"""
+<!DOCTYPE html>
+<html>
+<head>
+
 <style>
+
+body {{
+    margin: 0;
+    overflow: hidden;
+    background-color: transparent;
+}}
 
 .kotak {{
     width: 100%;
-    height: 350px;
+    height: 400px;
     border-radius: 20px;
     position: relative;
     overflow: hidden;
-    background: radial-gradient(circle, #1e3a8a, #020617);
+
+    background:
+    radial-gradient(circle at center,
+    #1e3a8a,
+    #020617);
+
     border: 2px solid cyan;
+
+    box-shadow:
+    0px 0px 20px rgba(0,255,255,0.4);
 }}
 
 .bola {{
@@ -54,8 +94,12 @@ st.markdown(f"""
     height: 18px;
     border-radius: 50%;
     position: absolute;
+
     background: cyan;
-    box-shadow: 0 0 15px cyan;
+
+    box-shadow:
+    0 0 15px cyan,
+    0 0 25px cyan;
 }}
 
 .b1 {{
@@ -75,88 +119,155 @@ st.markdown(f"""
 }}
 
 @keyframes gerak1 {{
-    from {{ transform: translate(0,0); }}
-    to {{ transform: translate(300px,220px); }}
+
+    from {{
+        transform: translate(0px,0px);
+    }}
+
+    to {{
+        transform: translate(300px,220px);
+    }}
 }}
 
 @keyframes gerak2 {{
-    from {{ transform: translate(0,200px); }}
-    to {{ transform: translate(280px,-50px); }}
+
+    from {{
+        transform: translate(0px,200px);
+    }}
+
+    to {{
+        transform: translate(280px,-50px);
+    }}
 }}
 
 @keyframes gerak3 {{
-    from {{ transform: translate(150px,0); }}
-    to {{ transform: translate(-100px,230px); }}
+
+    from {{
+        transform: translate(150px,0px);
+    }}
+
+    to {{
+        transform: translate(-100px,230px);
+    }}
 }}
 
 @keyframes gerak4 {{
-    0% {{ transform: translate(0,0); }}
-    25% {{ transform: translate(200px,50px); }}
-    50% {{ transform: translate(100px,200px); }}
-    75% {{ transform: translate(250px,120px); }}
-    100% {{ transform: translate(50px,250px); }}
+
+    0% {{
+        transform: translate(0px,0px);
+    }}
+
+    25% {{
+        transform: translate(200px,50px);
+    }}
+
+    50% {{
+        transform: translate(100px,200px);
+    }}
+
+    75% {{
+        transform: translate(250px,120px);
+    }}
+
+    100% {{
+        transform: translate(50px,250px);
+    }}
 }}
 
 </style>
-""", unsafe_allow_html=True)
 
-# =========================
-# ANIMASI PARTIKEL
-# =========================
+</head>
 
-st.subheader("⚛️ Simulasi Partikel Gas Ideal")
+<body>
 
-html_partikel = ""
+<div class="kotak">
 
-kelas = ["b1", "b2", "b3", "b4"]
-
-for i in range(20):
-
-    left = (i * 30) % 500
-    top = (i * 20) % 250
-
-    kelas_animasi = kelas[i % 4]
-
-    html_partikel += f"""
-    <div class='bola {kelas_animasi}'
-    style='left:{left}px; top:{top}px;'>
+    <div class="bola b1"
+    style="left:20px; top:20px;">
     </div>
-    """
 
-st.markdown(
-    f"""
-    <div class='kotak'>
-        {html_partikel}
+    <div class="bola b2"
+    style="left:100px; top:80px;">
     </div>
-    """,
-    unsafe_allow_html=True
+
+    <div class="bola b3"
+    style="left:200px; top:140px;">
+    </div>
+
+    <div class="bola b4"
+    style="left:300px; top:50px;">
+    </div>
+
+    <div class="bola b1"
+    style="left:400px; top:180px;">
+    </div>
+
+    <div class="bola b2"
+    style="left:500px; top:120px;">
+    </div>
+
+    <div class="bola b3"
+    style="left:600px; top:220px;">
+    </div>
+
+</div>
+
+</body>
+</html>
+"""
+
+# ====================================
+# TAMPILKAN ANIMASI
+# ====================================
+
+components.html(
+    html_code,
+    height=420
 )
-# =========================
+
+# ====================================
+# PERSAMAAN GAS IDEAL
+# ====================================
+
+st.subheader("📘 Persamaan Gas Ideal")
+
+
+::contentReference[oaicite:0]{index=0}
+
+
+st.write(
+    "Karena yang dicari massa jenis (ρ), "
+    "maka persamaan diubah menjadi:"
+)
+
+:contentReference[oaicite:1]{index=1}
+
+# ====================================
 # LANGKAH PENYELESAIAN
-# =========================
-st.subheader("Langkah Penyelesaian")
+# ====================================
+
+st.subheader("🧮 Langkah Penyelesaian")
 
 st.write("### 1. Mengubah tekanan dari Torr ke atm")
 
-st.latex(r"P = \frac{1520}{760} = 2\ atm")
+:contentReference[oaicite:2]{index=2}
 
 st.write("### 2. Mengubah suhu ke Kelvin")
 
-st.latex(r"T = 25 + 273 = 298\ K")
+:contentReference[oaicite:3]{index=3}
 
-st.write("### 3. Menentukan massa molar oksigen")
+st.write("### 3. Menentukan massa molar gas oksigen")
 
-st.latex(r"M_{O_2} = 2 \times 16 = 32\ g/mol")
+:contentReference[oaicite:4]{index=4}
 
-st.write("### 4. Memasukkan nilai ke rumus massa jenis")
+st.write("### 4. Memasukkan ke rumus massa jenis")
 
-st.latex(r"\rho = \frac{PM}{RT}")
+:contentReference[oaicite:5]{index=5}
 
-st.latex(r"\rho = \frac{(2)(32)}{(0.082)(298)}")
+# ====================================
+# PERHITUNGAN
+# ====================================
 
-# =========================
-# PERHITUNGAN OTOMATIS
-# =========================
 P = 2
 M = 32
 R = 0.082
@@ -164,45 +275,68 @@ T = 298
 
 hasil = (P * M) / (R * T)
 
-# =========================
+# ====================================
 # TOMBOL HASIL
-# =========================
-if st.button("Tampilkan Hasil Perhitungan"):
+# ====================================
+
+if st.button("🚀 Tampilkan Hasil"):
 
     progress = st.progress(0)
 
     for i in range(100):
+
         time.sleep(0.01)
+
         progress.progress(i + 1)
 
     st.success("Perhitungan selesai!")
 
     st.markdown(
-        f'<div class="hasil">Massa Jenis Gas O₂ = {hasil:.2f} g/L</div>',
+        f'''
+        <div style="
+        background:linear-gradient(to right,#22c55e,#16a34a);
+        padding:20px;
+        border-radius:15px;
+        text-align:center;
+        font-size:32px;
+        color:white;
+        font-weight:bold;
+        box-shadow:0px 0px 20px rgba(0,255,0,0.5);
+        ">
+        Massa Jenis Gas O₂ = {hasil:.2f} g/L
+        </div>
+        ''',
         unsafe_allow_html=True
     )
 
     st.balloons()
 
-# =========================
+# ====================================
 # KESIMPULAN
-# =========================
-st.subheader("Kesimpulan")
+# ====================================
 
-st.write(
-    f"""
+st.subheader("📌 Kesimpulan")
+
+st.write(f"""
+
 Berdasarkan persamaan gas ideal:
 
 PV = nRT
 
-maka massa jenis gas oksigen pada tekanan 1520 Torr
- dan suhu 25°C adalah:
+maka massa jenis gas oksigen pada:
+- tekanan 1520 Torr
+- suhu 25°C
 
-## {hasil:.2f} g/L
-"""
+adalah:
+
+# {hasil:.2f} g/L
+
+""")
+
+# ====================================
+# TEST
+# ====================================
+
+assert round(hasil, 2) == 2.62, (
+    "Hasil perhitungan tidak sesuai"
 )
-
-# =========================
-# TEST SEDERHANA
-# =========================
-assert round(hasil, 2) == 2.62, "Hasil perhitungan tidak sesuai"
